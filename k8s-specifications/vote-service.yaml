@@ -6,7 +6,7 @@ metadata:
   name: vote
   namespace: vote
 spec:
-  type: LoadBalancer
+  type: NodePort
   ports:
   - name: "vote-service"
     port: 5000
@@ -14,4 +14,19 @@ spec:
     nodePort: 31000
   selector:
     app: vote
-  
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: vote
+  name: vote-ext
+  namespace: vote
+spec:
+  type: LoadBalancer
+  ports:
+  - name: "vote-service-ext"
+    port: 80
+    targetPort: 80
+  selector:
+    app: vote

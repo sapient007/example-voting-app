@@ -4,6 +4,10 @@ import os
 import socket
 import random
 import json
+import logging
+
+logging.basicConfig
+logger = logging.getLogger()
 
 option_a = os.getenv('OPTION_A', "Bernie")
 option_b = os.getenv('OPTION_B', "Bloomberg")
@@ -29,6 +33,11 @@ def hello():
         vote = request.form['vote']
         data = json.dumps({'voter_id': voter_id, 'vote': vote})
         redis.rpush('votes', data)
+        #get all keys in redis and dump to log*
+        logger.warn('All the Redis Keys: {}'.format(redis.keys()))
+        keys = redis.keys()
+        for key in keys:
+            logging.warn("key {} has value {}".format(key, redis.lrange(key, 0, -1)))
 
     resp = make_response(render_template(
         'index.html',

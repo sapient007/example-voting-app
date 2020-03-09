@@ -33,6 +33,7 @@ class Worker {
       "INSERT INTO votes (id, vote) VALUES (?, ?)");
     insert.setString(1, voterID);
     insert.setString(2, vote);
+    System.err.printf("Prepared insert statement: " + insert);
 
     try {
       insert.executeUpdate();
@@ -75,6 +76,7 @@ class Worker {
           conn = DriverManager.getConnection(url, "postgres", "postgres");
         } catch (SQLException e) {
           System.err.println("Waiting for db");
+          System.err.println(e);
           sleep(1000);
         }
       }

@@ -16,7 +16,7 @@ spec:
         app: vote
     spec:
       containers:
-      - image: gcr.io/automl-document-mling/example-voting-app-vote:k8s
+      - image: vote
         name: vote
         ports:
         - containerPort: 80
