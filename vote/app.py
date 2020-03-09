@@ -10,7 +10,7 @@ logging.basicConfig
 logger = logging.getLogger()
 
 option_a = os.getenv('OPTION_A', "Bernie")
-option_b = os.getenv('OPTION_B', "Bloomberg")
+option_b = os.getenv('OPTION_B', "Biden")
 hostname = socket.gethostname()
 
 app = Flask(__name__)
