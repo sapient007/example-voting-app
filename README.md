@@ -77,7 +77,7 @@ deployment "worker" created
 
 The vote interface is then available on port 31000 on each host of the cluster, the result one is available on port 31001.
 
-## running in GKE (Google Kubernetes Engine)
+## Run in GKE (Google Kubernetes Engine)
 
 > 💡 Recommended if you're using Google Cloud Platform and want to try it on
 > a realistic cluster.
