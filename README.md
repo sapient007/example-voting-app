@@ -50,7 +50,7 @@ docker-compose -f docker-compose-windows.yml up -d
 
 The app will be running at [http://localhost:5000](http://localhost:5000), and the results will be at [http://localhost:5001](http://localhost:5001).
 
-Run the app in Kubernetes
+Run the app in Kubernetes (Minikube)
 -------------------------
 
 The folder k8s-specifications contains the yaml specifications of the Voting App's services.
