@@ -14,3 +14,19 @@ spec:
     nodePort: 31001
   selector:
     app: result
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: result
+  name: result-ext
+  namespace: vote
+spec:
+  type: LoadBalancer
+  ports:
+  - name: "result-service-ext"
+    port: 80
+    targetPort: 80
+  selector:
+    app: result
