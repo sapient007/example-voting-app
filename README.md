@@ -113,7 +113,7 @@ The vote interface is then available on port 31000 on each host of the cluster, 
 
 1. Create *Vote* namespace in Kubernetes
 
-    '''sh
+    ```sh
     kubectl create namespace vote
     ```
 
