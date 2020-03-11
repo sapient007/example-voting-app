@@ -1,24 +1,34 @@
 from flask import Flask, render_template, request, make_response, g
-from redis import Redis
 import os
 import socket
 import random
 import json
 import logging
+from google.cloud import pubsub_v1
 
-logging.basicConfig
-logger = logging.getLogger()
+logging.basicConfig()
+logger = logging.getLogger('logger')
 
 option_a = os.getenv('OPTION_A', "Bernie")
 option_b = os.getenv('OPTION_B', "Biden")
 hostname = socket.gethostname()
 
+#get GCP environment variables
+project_id = os.getenv("PROJECT_ID", "automl-document-mling")
+topic_name = os.getenv("TOPIC_NAME", "votes")
+topic_path = "projects/{}/topics/{}".format(project_id,topic_name)
+
 app = Flask(__name__)
 
-def get_redis():
-    if not hasattr(g, 'redis'):
-        g.redis = Redis(host="redis", db=0, socket_timeout=5)
-    return g.redis
+def get_pubsub():
+    publisher = pubsub_v1.PublisherClient()
+    ## used for demo purpose only. topic creation can be removed if created outside of application    
+    try:
+        publisher.create_topic(topic_path)
+    except Exception as e:
+        #do nothing topic already created
+        logger.warn("Error while creating topic: {}".format(e))
+    return publisher
 
 @app.route("/", methods=['POST','GET'])
 def hello():
@@ -29,15 +39,10 @@ def hello():
     vote = None
 
     if request.method == 'POST':
-        redis = get_redis()
         vote = request.form['vote']
-        data = json.dumps({'voter_id': voter_id, 'vote': vote})
-        redis.rpush('votes', data)
-        #get all keys in redis and dump to log*
-        logger.warn('All the Redis Keys: {}'.format(redis.keys()))
-        keys = redis.keys()
-        for key in keys:
-            logging.warn("key {} has value {}".format(key, redis.lrange(key, 0, -1)))
+        publisher = get_pubsub()
+        logger.warn("publishing vote for {} with election {} ".format(voter_id, vote))
+        publisher.publish(topic_path, bytes(voter_id), vote=bytes(vote))
 
     resp = make_response(render_template(
         'index.html',

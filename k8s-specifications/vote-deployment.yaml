@@ -18,6 +18,17 @@ spec:
       containers:
       - image: vote
         name: vote
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value:  /keys/key.json
         ports:
         - containerPort: 80
           name: vote
+        volumeMounts:
+        - name: keys
+          mountPath: "/keys"
+          readOnly: true
+      volumes:
+      - name: keys
+        secret:
+          secretName: pubsub-key-vote
