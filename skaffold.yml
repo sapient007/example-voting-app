@@ -10,8 +10,6 @@ build:
     context: vote
   - image: result
     context: result
-  - image: worker
-    context: worker
   tagPolicy:
     gitCommit: {}
 deploy:
