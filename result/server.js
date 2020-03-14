@@ -50,6 +50,14 @@ io.sockets.on('connection', function (socket) {
 // Import the Google Cloud client library
 const {BigQuery} = require('@google-cloud/bigquery');
 
+async.retry(
+  {times: 1000, interval: 1000},
+  function(callback) {
+    var votes = queryVotes();
+    console.log('emitted: ' + votes);
+    }
+);
+
 async function queryVotes() {
 // Queries a public Shakespeare dataset.
 
@@ -70,25 +78,14 @@ async function queryVotes() {
     const [rows] = await bigqueryClient.query(options);
     
     var votes = {a: 0, b: 0};
-    
-    console.log('Rows:');
-    // rows.forEach(row => {
-    //   const url = row['vote_selection'];
-    //   const viewCount = row['count'];
-    //   votes[row.vote_selection] = parseInt(row.count);
-    //   console.log(`url: ${url}, ${viewCount} views`);
-    // });
-
     rows.forEach(function(row){
       votes[row.vote_selection] = parseInt(row.count);
     });
 
     console.log(JSON.stringify(votes));
     io.sockets.emit("scores", JSON.stringify(votes));
-}
-
-queryVotes();
-
+    setTimeout(function() {queryVotes() }, 1000);
+};
 
 // function getVotes(client) {
 //   client.query('SELECT vote, COUNT(id) AS count FROM votes GROUP BY vote', [], function(err, result) {

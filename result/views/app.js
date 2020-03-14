@@ -28,15 +28,18 @@ app.controller('statsCtrl', function($scope){
   };
 
   var init = function(){
+    console.log('init function');
     document.body.style.opacity=1;
     updateScores();
   };
   socket.on('message',function(data){
+    console.log('got message' + data);
     init();
   });
 });
 
 function getPercentages(a, b) {
+  console.log(a + ':' + b);
   var result = {};
 
   if (a + b > 0) {
