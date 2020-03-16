@@ -7,7 +7,14 @@ def vote_pubsub(event, context):
          context (google.cloud.functions.Context): The Cloud Functions event
          metadata. The `event_id` field contains the Pub/Sub message ID. The
          `timestamp` field contains the publish time.
+    
+    Environment variables:
+        DATASET_ID: < Dataset of bigquery>
+        TABLE_ID: <table of bigquery>
+    
     """
+
+
     import base64
     import os
     from google.cloud import bigquery
