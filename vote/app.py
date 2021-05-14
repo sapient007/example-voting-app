@@ -15,6 +15,10 @@ hostname = socket.gethostname()
 
 app = Flask(__name__)
 
+gunicorn_error_logger = logging.getLogger('gunicorn.error')
+app.logger.handlers.extend(gunicorn_error_logger.handlers)
+app.logger.setLevel(logging.INFO)
+
 def get_redis():
     if not hasattr(g, 'redis'):
         g.redis = Redis(host="redis", db=0, socket_timeout=5)
@@ -31,6 +35,7 @@ def hello():
     if request.method == 'POST':
         redis = get_redis()
         vote = request.form['vote']
+        app.logger.info('Received vote for %s', vote)
         data = json.dumps({'voter_id': voter_id, 'vote': vote})
         redis.rpush('votes', data)
         #get all keys in redis and dump to log*
